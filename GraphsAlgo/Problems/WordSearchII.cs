@@ -32,14 +32,40 @@ namespace GraphsAlgo.Problems
 
             String[] words = new string[] { "oath", "pea", "eat", "rain" };
 
-            
+            var foundWords = SearchPath(Graph, index, words);
 
+            Assert.IsTrue(foundWords.Count == 2, "Se esperaban 2 palabras encontradas");
+            Assert.IsTrue(foundWords.Contains("oath"), "Se esperaba la palabra oath");
+            Assert.IsTrue(foundWords.Contains("eat"), "Se esperaba la palabra pea");
+
+            PrintOutput(foundWords);
+        }
+
+       
+
+        [Test]
+        public void Test2()
+        {
+            Dictionary<Tuple<int, int>, Vertex<Tuple<int, int>, char>> Graph = GetGraphForTest2(out Dictionary<char, List<Tuple<int, int>>> index);
+
+            //["abcb"]
+            string[] words = new string[] { "abcb" };
+
+            var bfs = new BreadthFirstSearch.BreadthFirstSearch();
+            var foundWords = SearchPath(Graph, index, words);
+            Assert.IsTrue(foundWords.Count == 0, "Se esperaban 0 palabras encontradas");
+            PrintOutput(foundWords);
+        }
+
+
+        private static List<string> SearchPath(Dictionary<Tuple<int, int>, Vertex<Tuple<int, int>, char>> Graph, Dictionary<char, List<Tuple<int, int>>> index, string[] words)
+        {
+            var foundWords = new List<string>();
             var bfs = new BreadthFirstSearch.BreadthFirstSearch();
 
             // only search in nodes with the start letter 
 
-            bool isFirst = true;
-            Console.Write("[");
+       
             foreach (string currentWord in words)
             {
                 char firstLetter = currentWord[0];
@@ -49,26 +75,21 @@ namespace GraphsAlgo.Problems
                     foreach (Tuple<int, int> vertexKey in index[firstLetter])
                     {
                         bool found = bfs.SearchPath(Graph, vertexKey, currentWord.ToCharArray());
-
+                       
                         if (found)
                         {
-                            if (isFirst)
-                            {
-                                
-                                isFirst = false;
-                            }
-                            else
-                            {
-                                Console.Write(",");
-                            }
-                            Console.Write($"\"{currentWord}\"");
+                            foundWords.Add(currentWord);
+                           
+                           
                         }
 
                     }
                 }
             }
 
-            Console.Write("]");
+          
+
+            return foundWords;
         }
 
         private static Dictionary<Tuple<int, int>, Vertex<Tuple<int, int>, char>> GetGraphForTest1(out Dictionary<char, List<Tuple<int, int>>> index)
@@ -135,49 +156,7 @@ namespace GraphsAlgo.Problems
             return vertices;
         }
 
-        [Test]
-        public void Test2()
-        {
-            Dictionary<Tuple<int, int>, Vertex<Tuple<int, int>, char>> Graph = GetGraphForTest2(out Dictionary<char, List<Tuple<int, int>>> index);
-
-            //["abcb"]
-            String[] words = new string[] { "abcb" };
-
-            var bfs = new BreadthFirstSearch.BreadthFirstSearch();
-
-            bool isFirst = true;
-            Console.Write("[");
-            foreach (string currentWord in words)
-            {
-                
-                char firstLetter = currentWord[0];
-
-                if (index.ContainsKey(firstLetter))
-                {
-                    foreach (Tuple<int, int> vertexKey in index[firstLetter])
-                    {
-                        bool found = bfs.SearchPath(Graph, vertexKey, currentWord.ToCharArray());
-
-                        if (found)
-                        {
-                            if (isFirst)
-                            {
-                               
-                                isFirst = false;
-                            }
-                            else
-                            {
-                                Console.Write(",");
-                            }
-                            Console.Write($"\"{currentWord}\"");
-                        }
-
-                    }
-                }
-            }
-
-            Console.Write("]");
-        }
+       
 
 
         private static Dictionary<Tuple<int, int>, Vertex<Tuple<int, int>, char>> GetGraphForTest2(out Dictionary<char, List<Tuple<int, int>>> index)
@@ -241,6 +220,27 @@ namespace GraphsAlgo.Problems
             }
             // Console.WriteLine(edgeCounter);
             return vertices;
+        }
+
+
+        private void PrintOutput(List<string> foundWords)
+        {
+            bool isFirst = true;
+            Console.Write("[");
+            foreach (string word in foundWords)
+            {
+                if (isFirst)
+                {
+
+                    isFirst = false;
+                }
+                else
+                {
+                    Console.Write(",");
+                }
+                Console.Write($"\"{word}\"");
+            }
+            Console.Write("]");
         }
     }
 }
