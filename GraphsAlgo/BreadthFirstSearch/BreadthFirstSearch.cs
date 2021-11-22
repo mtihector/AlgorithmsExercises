@@ -96,7 +96,7 @@ namespace GraphsAlgo.BreadthFirstSearch
                     foreach (K currentRefKey in vertex.AdjacentList)
                     {
                         Vertex<K, V> refVertex = vertices[currentRefKey];
-                        if (!refVertex.Traversed)
+                        if (!refVertex.Traversed && (refVertex.Value.Equals(pathToFind[cdeep+1])))
                         {
                             refVertex.Traversed = true;
                             refVertex.Predesor = vertex;
