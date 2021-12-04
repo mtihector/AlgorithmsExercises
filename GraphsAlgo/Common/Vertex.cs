@@ -1,6 +1,6 @@
 ﻿namespace GraphsAlgo.Common
 {
-    internal class Vertex<K, V>
+    public class Vertex<K, V>
     {
         private K _key;
 
